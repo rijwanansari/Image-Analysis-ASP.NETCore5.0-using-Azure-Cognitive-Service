@@ -1,0 +1,87 @@
+﻿@page
+@model IndexModel
+@using computervision.aspcore.Services.Dto;
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h4>Rijsat.com | Image Analysis using cognive service in asp.net core 5.0</h4>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<form enctype="multipart/form-data" method="post">
+   @*File Upload part*@
+    <div class="form-group">
+        <label class="file">
+            <input type="file" asp-for="fileUpload.FormFile" multiple aria-label="File browser example">
+            <span class="file-custom"></span>
+        </label>
+        <input asp-page-handler="Upload" class="btn btn-primary" type="submit" value="Upload">
+    </div>
+
+    @{
+        if (ViewData["SuccessMessage"] != null)
+        {
+            <span class="badge badge-success"> @ViewData["SuccessMessage"]</span>
+        }
+    }
+
+    @*Displaying Analysis results*@
+    <div class="row">
+        <div class="col-sm-6">
+
+            @if (ViewData["ImageUrl"] != null)
+            {
+                var imageUrl = Convert.ToString(ViewData["ImageUrl"]);
+                <img src="UploadImages/@imageUrl" alt="rijsat.com" class="img-thumbnail" />
+            }
+        </div>
+        <div class="col-sm-6 small">
+            <p>
+                @if (ViewData["ImageAnalysisViewModel"] != null)
+                {
+                    var imageAnalysisView = (ImageAnalysisViewModel)ViewData["ImageAnalysisViewModel"];
+                    <h5>Description</h5>
+                    foreach (var caption in imageAnalysisView.imageAnalysisResult.Description.Captions)
+                    {
+                        <span class="text-info"> @caption.Text: with confidence @caption.Confidence</span><br />
+                    }
+                    <h5>Category:</h5>
+                    foreach (var category in imageAnalysisView.imageAnalysisResult.Categories)
+                    {
+                        <span class="text-success"> @category.Name with confidence: @category.Score</span><br />
+                    }
+                    <h5>Tags</h5>
+                    foreach (var tag in imageAnalysisView.imageAnalysisResult.Tags)
+                    {
+                        <span class="badge badge-success">@tag.Name - @tag.Confidence</span>
+                    }
+                    <h5>Object Detection</h5>
+                    foreach (var obj in imageAnalysisView.imageAnalysisResult.Objects)
+                    {
+
+                        <span class="badge badge-warning">@obj.ObjectProperty with Confidence @obj.Confidence</span>
+                    }
+                    <h5>Face Detection</h5>
+                    foreach (var face in imageAnalysisView.imageAnalysisResult.Faces)
+                    {
+                        <span class="badge badge-info">
+                            A @face.Gender of age @face.Age at location @face.FaceRectangle.Left, @face.FaceRectangle.Top, @face.FaceRectangle.Width, @face.FaceRectangle.Top, @face.FaceRectangle.Height
+                        </span>
+                    }
+
+                    <h5>Image color scheme</h5>
+                    <span class="badge badge-secondary">Is black and white?:@imageAnalysisView.imageAnalysisResult.Color.IsBWImg</span>
+                    <span class="badge badge-secondary">Accent color:@imageAnalysisView.imageAnalysisResult.Color.AccentColor</span>
+                    <span class="badge badge-secondary">Dominant background color:@imageAnalysisView.imageAnalysisResult.Color.DominantColorBackground</span>
+                    <span class="badge badge-secondary">Dominant foreground color:@imageAnalysisView.imageAnalysisResult.Color.DominantColorForeground</span>
+
+                    <h5>Image Type</h5>
+                    <span class="badge badge-secondary">Clip Art Type: @imageAnalysisView.imageAnalysisResult.ImageType.ClipArtType</span>
+                    <span class="badge badge-secondary">Line Drawing Type: @imageAnalysisView.imageAnalysisResult.ImageType.LineDrawingType</span>
+
+                }
+            </p>
+        </div>
+    </div>
+</form>
