@@ -10,8 +10,8 @@ namespace computervision.aspcore.Services
     public class CompterVisionService : ICompuerVisionService
     {
         // Add your Computer Vision subscription key and endpoint
-        private string subscriptionKey = "05b6ca4476c447eeb8c841e16119d101";
-        private string endpoint = "https://autotagingdemo.cognitiveservices.azure.com/";
+        private string subscriptionKey = "PASTE_YOUR_COMPUTER_VISION_SUBSCRIPTION_KEY_HERE";
+        private string endpoint = "PASTE_YOUR_COMPUTER_VISION_ENDPOINT_HERE";
         /*
  * AUTHENTICATE
  * Creates a Computer Vision client used by each example.
